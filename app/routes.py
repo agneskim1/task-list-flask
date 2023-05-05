@@ -1,6 +1,7 @@
 from flask import Blueprint, make_response, request, jsonify, abort
 from app.models.task import Task
 from app import db
+from sqlalchemy import desc, asc
 
 tasks_bp = Blueprint("task",__name__, url_prefix = "/tasks")
 
@@ -56,8 +57,10 @@ def post_one_task():
 @tasks_bp.route("", methods = ["GET"])
 def get_all_tasks():
     task_response = []
-    tasks = Task.query.all()
+
     
+    tasks = Task.query.all()
+
     for task in tasks:
         if not task.completed_at:
             task.completed_at = False
@@ -67,6 +70,13 @@ def get_all_tasks():
             "description": task.description,
             "is_complete": task.completed_at
         })
+    
+    sort_query = request.args.get("sort")
+    if sort_query =="desc":
+        task_response = sorted(task_response, key = lambda task: task["title"], reverse = True)
+    elif sort_query =="asc":
+        task_response = sorted(task_response, key = lambda task: task["title"])
+
     return jsonify(task_response)
 
 @tasks_bp.route("/<task_id>", methods = ["GET"])

@@ -43,7 +43,7 @@ Create two databases:
 
 ## Creating a `.env` File
 
-Create a file named `.env`.
+Create a file named `.env`
 
 Create two environment variables that will hold your database URLs.
 

@@ -9,7 +9,10 @@ goals_bp = Blueprint("goal", __name__, url_prefix = "/goals")
 @goals_bp.route("", methods = ["POST"])
 def post_one_goal():
     request_body = request.get_json()
-
+    try:
+        request_body["title"]
+    except:
+        abort(make_response({"details": "Invalid data"}, 400))
     goal = Goal(
         title = request_body["title"]
     )

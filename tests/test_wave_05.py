@@ -3,7 +3,7 @@ from app.models.goal import Goal
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_goals_no_saved_goals(client: Any):
+def test_get_goals_no_saved_goals(client):
     # Act
     response = client.get("/goals")
     response_body = response.get_json()
@@ -31,7 +31,7 @@ def test_get_goals_one_saved_goal(client, one_goal):
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_goal(client: Any, one_goal: None):
+def test_get_goal(client, one_goal):
     # Act
     response = client.get("/goals/1")
     response_body = response.get_json()
@@ -84,7 +84,7 @@ def test_create_goal(client):
 
 
 # @pytest.mark.skip(reason="test to be completed by student")
-def test_update_goal(client: Any,one_goal):
+def test_update_goal(client,one_goal):
     # raise Exception("Complete test")
     # Act
     # ---- Complete Act Here ----
@@ -105,7 +105,7 @@ def test_update_goal(client: Any,one_goal):
     goal = Goal.query.get(1)
     assert goal.title == "Updated Goal Title"
 
-@pytest.mark.skip(reason="test to be completed by student")
+# @pytest.mark.skip(reason="test to be completed by student")
 def test_update_goal_not_found(client):
     # raise Exception("Complete test")
     # Act
@@ -122,7 +122,7 @@ def test_update_goal_not_found(client):
     # ---- Complete Assertions Here ----
 
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+# @pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_goal(client, one_goal):
     # Act
     response = client.delete("/goals/1")
@@ -163,7 +163,7 @@ def test_delete_goal_not_found(client):
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
-def test_create_goal_missing_title(client: Any):
+def test_create_goal_missing_title(client):
     # Act
     response = client.post("/goals", json={})
     response_body = response.get_json()

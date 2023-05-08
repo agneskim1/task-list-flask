@@ -3,19 +3,23 @@ from app.models.task import Task
 from app import db
 from sqlalchemy import desc, asc
 from datetime import datetime
+import requests
+#path = ""
+#key = os.environ.get("SLACK_API_KEY")
 
 tasks_bp = Blueprint("task",__name__, url_prefix = "/tasks")
 
-def validate_id(task_id):
+
+def validate_model(model_id,cls):
     try:
-        task_id = int(task_id)
+        model_id = int(model_id)
     except:
         abort(make_response({"details": "Invalid data"}, 400))
     
-    task = Task.query.get(task_id)
-    if not task:
-        abort(make_response({"message": f"Task {task_id} does not exist"}, 404))
-    return task
+    model = cls.query.get(model_id)
+    if not model:
+        abort(make_response({"message": f"{cls.__name__ } {model_id} does not exist"}, 404))
+    return model
 
 def validate_arguments(request_body, argument):
     try:
@@ -82,7 +86,7 @@ def get_all_tasks():
 
 @tasks_bp.route("/<task_id>", methods = ["GET"])
 def get_one_task(task_id):
-    task = validate_id(task_id)
+    task = validate_model(task_id, Task)
     
     if not task.completed_at:
         task.completed_at = False
@@ -98,7 +102,7 @@ def update_one_task(task_id):
 
     request_body = request.get_json()
 
-    task = validate_id(task_id)
+    task = validate_model(task_id, Task)
 
     if not request_body.get("completed_at"):
         request_body["completed_at"] = None
@@ -121,16 +125,16 @@ def update_one_task(task_id):
 
 @tasks_bp.route("/<task_id>", methods = ["DELETE"])
 def delete_one_task(task_id):
-    task = validate_id(task_id)
+    task = validate_model(task_id, Task)
 
     db.session.delete(task)
     db.session.commit()
 
-    return {"details": f"Task {task_id} \"Go on my daily walk 🏞\" successfully deleted"}
+    return {"details": f'Task {task_id} \"{task.title}" successfully deleted'}
 
 @tasks_bp.route("/<task_id>/mark_complete", methods = ["PATCH"])
 def update_mark_to_complete(task_id):
-    task = validate_id(task_id)
+    task = validate_model(task_id, Task)
 
     task.completed_at = datetime.now()
     db.session.commit()
@@ -144,11 +148,11 @@ def update_mark_to_complete(task_id):
 
 @tasks_bp.route("/<task_id>/mark_incomplete", methods = ["PATCH"])
 def update_mark_to_incomplete(task_id):
-    task = validate_id(task_id)
+    task = validate_model(task_id, Task)
 
     task.completed_at = None
     db.session.commit()
-    
+
     return {"task" : {
         "id": task.task_id,
         "title": task.title,

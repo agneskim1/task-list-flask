@@ -4,8 +4,7 @@ from app import db
 from sqlalchemy import desc, asc
 from datetime import datetime
 import requests
-#path = ""
-#key = os.environ.get("SLACK_API_KEY")
+import os 
 
 tasks_bp = Blueprint("task",__name__, url_prefix = "/tasks")
 
@@ -139,6 +138,18 @@ def update_mark_to_complete(task_id):
     task.completed_at = datetime.now()
     db.session.commit()
     
+    path = "https://slack.com/api/chat.postMessage"
+    key = os.environ.get("SLACK_API_KEY")
+    params = {
+        "channel": "task-list-project",
+        "text": f"Someone just completed the task {task.title}"
+    }
+    headers = {
+        "Authorization": key
+    }
+
+    requests.post(url = path, params = params, headers = headers)
+
     return {"task" : {
         "id": task.task_id,
         "title": task.title,

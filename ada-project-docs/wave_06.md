@@ -28,7 +28,7 @@ Use independent research to discover how to set up a one-to-many relationship in
 
 The Goal model should have a _relationship_ with the model Task.
 
-After learning the strategy for creating a one-to-many relationship, in the Goal model, we recommend:
+After learning the strategy for creating a one-to-many relationship, in the Goal model, we recommend:get
 
 - Setting the `lazy` value to `True`
 

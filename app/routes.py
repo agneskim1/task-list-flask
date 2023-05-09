@@ -91,6 +91,7 @@ def get_one_task(task_id):
         task.completed_at = False
     return {"task" : {
         "id": task.task_id,
+        "goal_id": task.goal_id,
         "title": task.title,
         "description": task.description,
         "is_complete": task.completed_at

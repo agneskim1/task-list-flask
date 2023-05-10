@@ -15,10 +15,19 @@ class Task(db.Model):
             self.completed_at = False
         else:
             self.completed_at = True
-        return {
-            "id": self.task_id,
-            "title": self.title,
-            "description": self.description,
-            "is_complete": self.completed_at
-        }
+        if self.goal_id:
+            return {
+                "id": self.task_id,
+                "goal_id": self.goal_id,
+                "title": self.title,
+                "description": self.description,
+                "is_complete": self.completed_at
+            }
+        else:
+            return {
+                "id": self.task_id,
+                "title": self.title,
+                "description": self.description,
+                "is_complete": self.completed_at
+            }
 

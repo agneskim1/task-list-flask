@@ -49,16 +49,8 @@ def post_one_task():
     db.session.add(task)
     db.session.commit()
 
-    # if not task.completed_at:
-    #     task.completed_at = False
     return make_response({"task": task.to_dict()}, "201 CREATED")
         
-    #     {"task": {
-    #     "id": task.task_id,
-    #     "title": task.title,
-    #     "description": task.description,
-    #     "is_complete": task.completed_at
-    # } }, "201 CREATED")
 
 @tasks_bp.route("", methods = ["GET"])
 def get_all_tasks():
@@ -68,14 +60,8 @@ def get_all_tasks():
     tasks = Task.query.all()
 
     for task in tasks:
-        # if not task.completed_at:
-        #     task.completed_at = False
         task_response.append(task.to_dict())
-        #     "id": task.task_id,
-        #     "title": task.title,
-        #     "description": task.description,
-        #     "is_complete": task.completed_at
-        # })
+
     
     sort_query = request.args.get("sort")
     if sort_query =="desc":
@@ -89,18 +75,7 @@ def get_all_tasks():
 def get_one_task(task_id):
     task = validate_model(task_id, Task)
     
-    if not task.completed_at:
-        task.completed_at = False
-    if task.goal_id:
-        return {"task" : {
-            "id": task.task_id,
-            "goal_id": task.goal_id,
-            "title": task.title,
-            "description": task.description,
-            "is_complete": task.completed_at
-        }}
-    else:
-        return {"task": task.to_dict()}
+    return {"task": task.to_dict()}
 
 @tasks_bp.route("/<task_id>", methods = ["PUT"])
 def update_one_task(task_id):

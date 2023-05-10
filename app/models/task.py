@@ -10,5 +10,13 @@ class Task(db.Model):
     goal_id = db.Column(db.Integer, db.ForeignKey("goal.goal_id"), nullable = True)
     goal = db.relationship("Goal", back_populates = "tasks")
 
-
+    def to_dict(self):
+        if not self.completed_at:
+            self.completed_at = False
+        return {
+            "id": self.task_id,
+            "title": self.title,
+            "description": self.description,
+            "is_complete": self.completed_at
+        }
 

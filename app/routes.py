@@ -49,14 +49,16 @@ def post_one_task():
     db.session.add(task)
     db.session.commit()
 
-    if not task.completed_at:
-        task.completed_at = False
-    return make_response({"task": {
-        "id": task.task_id,
-        "title": task.title,
-        "description": task.description,
-        "is_complete": task.completed_at
-    } }, "201 CREATED")
+    # if not task.completed_at:
+    #     task.completed_at = False
+    return make_response({"task": task.to_dict()}, "201 CREATED")
+        
+    #     {"task": {
+    #     "id": task.task_id,
+    #     "title": task.title,
+    #     "description": task.description,
+    #     "is_complete": task.completed_at
+    # } }, "201 CREATED")
 
 @tasks_bp.route("", methods = ["GET"])
 def get_all_tasks():
@@ -66,14 +68,14 @@ def get_all_tasks():
     tasks = Task.query.all()
 
     for task in tasks:
-        if not task.completed_at:
-            task.completed_at = False
-        task_response.append({
-            "id": task.task_id,
-            "title": task.title,
-            "description": task.description,
-            "is_complete": task.completed_at
-        })
+        # if not task.completed_at:
+        #     task.completed_at = False
+        task_response.append(task.to_dict())
+        #     "id": task.task_id,
+        #     "title": task.title,
+        #     "description": task.description,
+        #     "is_complete": task.completed_at
+        # })
     
     sort_query = request.args.get("sort")
     if sort_query =="desc":
@@ -114,14 +116,7 @@ def update_one_task(task_id):
 
     db.session.commit()
 
-    if not task.completed_at:
-        task.completed_at = False
-    return {"task" : {
-        "id": task.task_id,
-        "title": task.title,
-        "description": task.description,
-        "is_complete": task.completed_at
-    }} 
+    return {"task" : task.to_dict()} 
 
 @tasks_bp.route("/<task_id>", methods = ["DELETE"])
 def delete_one_task(task_id):
@@ -151,12 +146,7 @@ def update_mark_to_complete(task_id):
 
     requests.post(url = path, params = params, headers = headers)
 
-    return {"task" : {
-        "id": task.task_id,
-        "title": task.title,
-        "description": task.description,
-        "is_complete": True
-    }} 
+    return {"task" : task.to_dict()} 
 
 @tasks_bp.route("/<task_id>/mark_incomplete", methods = ["PATCH"])
 def update_mark_to_incomplete(task_id):
@@ -165,9 +155,4 @@ def update_mark_to_incomplete(task_id):
     task.completed_at = None
     db.session.commit()
 
-    return {"task" : {
-        "id": task.task_id,
-        "title": task.title,
-        "description": task.description,
-        "is_complete": False
-    }} 
+    return {"task" : task.to_dict()} 

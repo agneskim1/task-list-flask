@@ -70,14 +70,15 @@ def create_new_task_to_specific_goal(goal_id):
     for task in task_ids:
         task = validate_model(task, Task)
         if not task.goal_id:
-            new_task = Task(
-                title = task.title,
-                description = task.description,
-                completed_at = task.completed_at,
-                goal = goal
-            )
+            task.goal_id = goal_id
+            # new_task = Task(
+            #     title = task.title,
+            #     description = task.description,
+            #     completed_at = task.completed_at,
+            #     goal = goal
+            # )
 
-            db.session.add(new_task)
+            # db.session.add(new_task)
             db.session.commit()
 
     return make_response({

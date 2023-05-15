@@ -54,14 +54,10 @@ def post_one_task():
 
 @tasks_bp.route("", methods = ["GET"])
 def get_all_tasks():
-    task_response = []
-
     
     tasks = Task.query.all()
-
-    for task in tasks:
-        task_response.append(task.to_dict())
-
+    
+    task_response = [task.to_dict() for task in tasks]
     
     sort_query = request.args.get("sort")
     if sort_query =="desc":

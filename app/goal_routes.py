@@ -25,12 +25,9 @@ def post_one_goal():
 
 @goals_bp.route("", methods = ["GET"])
 def get_all_goals():
-    goal_response =[]
-
     goals = Goal.query.all()
 
-    for goal in goals:
-        goal_response.append(goal.to_dict())
+    goal_response = [goal.to_dict() for goal in goals]
     return jsonify(goal_response)
 
 @goals_bp.route("/<goal_id>", methods = ["GET"])
@@ -70,14 +67,7 @@ def create_new_task_to_specific_goal(goal_id):
     for task in task_ids:
         task = validate_model(task, Task)
         if not task.goal_id:
-            new_task = Task(
-                title = task.title,
-                description = task.description,
-                completed_at = task.completed_at,
-                goal = goal
-            )
-
-            db.session.add(new_task)
+            task.goal_id = goal_id
             db.session.commit()
 
     return make_response({
@@ -89,10 +79,8 @@ def create_new_task_to_specific_goal(goal_id):
 def get_all_tasks_from_one_goal_id(goal_id):
     goal=validate_model(goal_id, Goal)
     tasks = Task.query.filter_by(goal_id = goal.goal_id)
-    task_list = []
 
-    for task in tasks:
-        task_list.append(task.to_dict())
+    task_list = [task.to_dict() for task in tasks]
     
     return make_response({
         "id": goal.goal_id,
